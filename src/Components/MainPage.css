@@ -62,7 +62,7 @@
   .container{
       position: absolute;
       top:20%;
-      left:50%
+      left:45%
   }  
   
   .user-name{
@@ -79,4 +79,13 @@
   }
   .user-details{
       display: flex;
+  }
+  .calendar-wrapper{
+    display: table-caption;
+  }
+  .end-time-button{
+      margin-top: 10px;
+  }
+  .book-button{
+      margin-top: 20px;
   }

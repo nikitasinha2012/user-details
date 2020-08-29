@@ -8,7 +8,9 @@ import 'antd/dist/antd.css';
 import DateTimeRangeContainer from 'react-advanced-datetimerange-picker'
 import { FormControl } from 'react-bootstrap'
 import moment from "moment";
-
+import { Inject, ScheduleComponent, Day, Week, WorkWeek, Month, Agenda, EventSettingsModel } from '@syncfusion/ej2-react-schedule';
+import { DataManager, WebApiAdaptor } from '@syncfusion/ej2-data';
+import { localeData } from 'moment';
 
 class MainPage extends Component {
     constructor() {
@@ -16,6 +18,15 @@ class MainPage extends Component {
         let now = new Date();
         let start = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0));
         let end = moment(start).add(1, "days").subtract(1, "seconds");
+        var EventSettingsModel = {
+            dataSource: [{
+                EndTime: new Date(2019, 0, 11, 6, 30),
+                StartTime: new Date(2019, 0, 11, 4, 0)
+            }]
+        };
+        // remoteData= new DataManager({
+        //     url:
+        // })
         this.state = {
             userDetails: [],
             selectedUserDetails: [],
@@ -23,7 +34,7 @@ class MainPage extends Component {
             start: start,
             end: end,
             text: '',
-            t:''
+            t: ''
         }
     }
     componentDidMount() {
@@ -41,7 +52,7 @@ class MainPage extends Component {
     }
     applyCallback = (startDate, endDate) => {
         var d = new Date(startDate)
-        var d1=new Date(endDate)
+        var d1 = new Date(endDate)
         this.setState({
             start: startDate,
             end: endDate
@@ -61,7 +72,7 @@ class MainPage extends Component {
 
     };
 
-    handleOk = (id,firstName,lastName,email) => {
+    handleOk = (id, firstName, lastName, email) => {
         const data = { id,firstName, lastName, email};
         fetch('https://reqres.in/api/users', {
             method: 'POST',
@@ -91,25 +102,14 @@ class MainPage extends Component {
     };
 
 
+
+
     render() {
-        const { userDetails, selectedUserDetails, text,t } = this.state;
-        console.log('time?', moment.utc(this.state.start).format("DD-MM-yyyy"))
-        let now = new Date();
-        let start = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0));
-        let end = moment(start).add(1, "days").subtract(1, "seconds");
-        let ranges = {
-            "Today Only": [moment(start), moment(end)],
-            "Yesterday Only": [moment(start).subtract(1, "days"), moment(end).subtract(1, "days")],
-            "3 Days": [moment(start).subtract(3, "days"), moment(end)]
-        }
-        let local = {
-            "format": "DD-MM-YYYY HH:mm",
-            "sundayFirst": false
-        }
-        let maxDate = moment(start).add(24, "hour")
+        const { userDetails, selectedUserDetails } = this.state;
         return (
             <div className="container">
-                <input type="text"></input>
+                <h1>Scheduler</h1>
+                <input type="text" placeholder="Search..." className="input-field"></input>
                 {
                     userDetails.map((item, index) => {
                         return (
@@ -121,7 +121,7 @@ class MainPage extends Component {
                                 <Modal
                                     title="Basic Modal"
                                     visible={this.state.visible}
-                                    onOk={this.handleOk.bind(this, item.id,item.first_name,item.last_name,item.email)}
+                                    onOk={this.handleOk.bind(this, item.id, item.first_name, item.last_name, item.email)}
                                     onCancel={this.handleCancel}
                                 >
                                     <div key={index}>
@@ -131,22 +131,9 @@ class MainPage extends Component {
                                         <p>Email : {selectedUserDetails.email}</p>
                                     </div>
                                     <div>
-                                        <DateTimeRangeContainer
-                                            ranges={ranges}
-                                            start={this.state.start}
-                                            end={this.state.end}
-                                            local={local}
-                                            maxDate={maxDate}
-                                            applyCallback={this.applyCallback}
-                                        >
-                                            <FormControl
-                                                id="formControlsTextB"
-                                                type="text"
-                                                label="Text"
-                                                placeholder="Enter text"
-                                                value={text}
-                                            />
-                                        </DateTimeRangeContainer>
+                                        <ScheduleComponent currentView='Month'  eventSettings={this.EventSettingsModel}>
+                                            <Inject services={[Day, Week, WorkWeek, Month, Agenda]} />
+                                        </ScheduleComponent>
                                     </div>
                                 </Modal>
                             </div>
@@ -157,6 +144,7 @@ class MainPage extends Component {
                 }
             </div>
         )
+
 
     }
 }

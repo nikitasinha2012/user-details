@@ -22,7 +22,8 @@ class MainPage extends Component {
             loading: false,
             start: start,
             end: end,
-            text: ''
+            text: '',
+            t:''
         }
     }
     componentDidMount() {
@@ -39,6 +40,8 @@ class MainPage extends Component {
             });
     }
     applyCallback = (startDate, endDate) => {
+        var d = new Date(startDate)
+        var d1=new Date(endDate)
         this.setState({
             start: startDate,
             end: endDate
@@ -89,7 +92,7 @@ class MainPage extends Component {
 
 
     render() {
-        const { userDetails, selectedUserDetails, text } = this.state;
+        const { userDetails, selectedUserDetails, text,t } = this.state;
         console.log('time?', moment.utc(this.state.start).format("DD-MM-yyyy"))
         let now = new Date();
         let start = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0));
@@ -141,7 +144,7 @@ class MainPage extends Component {
                                                 type="text"
                                                 label="Text"
                                                 placeholder="Enter text"
-                                                vaule={text}
+                                                value={text}
                                             />
                                         </DateTimeRangeContainer>
                                     </div>
